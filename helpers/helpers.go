@@ -40,3 +40,13 @@ func Fetch(url string) ([]byte, error) {
 func SetJSON(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }
+
+func CheckValidMethod(w http.ResponseWriter, r *http.Request, validMethod string) {
+	requestMethod := r.Method
+	validRequest := requestMethod == validMethod
+	if !validRequest {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte(http.StatusText(http.StatusMethodNotAllowed)))
+		return
+	}
+}

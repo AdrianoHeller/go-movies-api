@@ -9,12 +9,14 @@ import (
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.SetJSON(w)
+	helpers.CheckValidMethod(w, r, http.MethodGet)
 	w.WriteHeader(200)
 	w.Write([]byte("Pong"))
 }
 
 func GetMovieGenreHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.SetJSON(w)
+	helpers.CheckValidMethod(w, r, http.MethodGet)
 	bytes, err := helpers.Fetch("/genre/movie/list")
 	if err != nil {
 		log.Fatal(err)
@@ -25,6 +27,7 @@ func GetMovieGenreHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetTVGenreHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.SetJSON(w)
+	helpers.CheckValidMethod(w, r, http.MethodGet)
 	bytes, err := helpers.Fetch("/genre/tv/list")
 	if err != nil {
 		log.Fatal(err)
@@ -35,6 +38,7 @@ func GetTVGenreHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetMovieDetailHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.SetJSON(w)
+	helpers.CheckValidMethod(w, r, http.MethodGet)
 	query := r.URL.Query()
 	id := query.Get("id")
 	invalidID := len(id) <= 0
