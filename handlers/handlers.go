@@ -3,15 +3,13 @@ package handlers
 import (
 	"fmt"
 	"goclass/helpers"
-	"log"
 	"net/http"
 )
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.SetJSON(w)
 	helpers.CheckValidMethod(w, r, http.MethodGet)
-	w.WriteHeader(200)
-	w.Write([]byte("Pong"))
+	helpers.WriteResponse(w, http.StatusOK, []byte("Pong"))
 }
 
 func GetMovieGenreHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,10 +17,10 @@ func GetMovieGenreHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.CheckValidMethod(w, r, http.MethodGet)
 	bytes, err := helpers.Fetch("/genre/movie/list")
 	if err != nil {
-		log.Fatal(err)
+		helpers.WriteResponse(w, http.StatusInternalServerError, []byte(err.Error()))
+		return
 	}
-	w.WriteHeader(200)
-	w.Write(bytes)
+	helpers.WriteResponse(w, http.StatusOK, bytes)
 }
 
 func GetTVGenreHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,10 +28,10 @@ func GetTVGenreHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.CheckValidMethod(w, r, http.MethodGet)
 	bytes, err := helpers.Fetch("/genre/tv/list")
 	if err != nil {
-		log.Fatal(err)
+		helpers.WriteResponse(w, http.StatusInternalServerError, []byte(err.Error()))
+		return
 	}
-	w.WriteHeader(200)
-	w.Write(bytes)
+	helpers.WriteResponse(w, http.StatusOK, bytes)
 }
 
 func GetMovieDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,14 +41,13 @@ func GetMovieDetailHandler(w http.ResponseWriter, r *http.Request) {
 	id := query.Get("id")
 	invalidID := len(id) <= 0
 	if invalidID {
-		w.WriteHeader(400)
-		w.Write([]byte("you must choose a movie id"))
+		helpers.WriteResponse(w, http.StatusBadRequest, []byte("you must choose a movie id"))
 		return
 	}
 	bytes, err := helpers.Fetch(fmt.Sprintf("/movie/%s", id))
 	if err != nil {
-		log.Fatal(err)
+		helpers.WriteResponse(w, http.StatusInternalServerError, []byte(err.Error()))
+		return
 	}
-	w.WriteHeader(200)
-	w.Write(bytes)
+	helpers.WriteResponse(w, http.StatusOK, bytes)
 }

@@ -50,3 +50,8 @@ func CheckValidMethod(w http.ResponseWriter, r *http.Request, validMethod string
 		return
 	}
 }
+
+func WriteResponse(w http.ResponseWriter, statusCode int, message []byte) {
+	w.WriteHeader(statusCode)
+	w.Write(message)
+}
