@@ -106,3 +106,37 @@ func TestGetTVGenre(t *testing.T) {
 	}
 
 }
+
+func TestGetMovieDetail(t *testing.T) {
+	req, err := http.NewRequest(http.MethodGet, "/movie?id=2", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.GetMovieDetailHandler)
+	handler.ServeHTTP(rr, req)
+	requestOk := rr.Code == http.StatusOK
+	if !requestOk {
+		t.Errorf("got %v want %v", rr.Code, http.StatusOK)
+	}
+
+	got := rr.Body.Bytes()
+
+	var result map[string]interface{}
+
+	err = json.Unmarshal(got, &result)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	content, ok := result["overview"]
+	if !ok {
+		t.Errorf("expected overview got nil ")
+	}
+
+	if len(content.(string)) == 0 {
+		t.Errorf("expected overview got nil ")
+	}
+
+}
