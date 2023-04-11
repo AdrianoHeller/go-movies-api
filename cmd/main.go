@@ -14,6 +14,7 @@ func main() {
 	mux.HandleFunc("/", handlers.PingHandler)
 	mux.HandleFunc("/movies", handlers.GetMovieGenreHandler)
 	mux.HandleFunc("/movie", handlers.GetMovieDetailHandler)
+	mux.HandleFunc("/person", handlers.GetPersonHandler)
 	mux.HandleFunc("/tv", handlers.GetTVGenreHandler)
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%s", port),
