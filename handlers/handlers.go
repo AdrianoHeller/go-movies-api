@@ -51,3 +51,21 @@ func GetMovieDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	helpers.WriteResponse(w, http.StatusOK, bytes)
 }
+
+func GetPersonHandler(w http.ResponseWriter, r *http.Request) {
+	helpers.SetJSON(w)
+	helpers.CheckValidMethod(w, r, http.MethodGet)
+	query := r.URL.Query()
+	id := query.Get("id")
+	invalidID := len(id) <= 0
+	if invalidID {
+		helpers.WriteResponse(w, http.StatusBadRequest, []byte("you must choose a person id"))
+		return
+	}
+	bytes, err := helpers.Fetch(fmt.Sprintf("/person/%s", id))
+	if err != nil {
+		helpers.WriteResponse(w, http.StatusInternalServerError, []byte(err.Error()))
+		return
+	}
+	helpers.WriteResponse(w, http.StatusOK, bytes)
+}
