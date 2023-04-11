@@ -174,3 +174,37 @@ func TestGetPerson(t *testing.T) {
 	}
 
 }
+
+func TestGetPersonImages(t *testing.T) {
+	req, err := http.NewRequest(http.MethodGet, "/person/images?id=10", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.GetPersonImagesHandler)
+	handler.ServeHTTP(rr, req)
+	requestOk := rr.Code == http.StatusOK
+	if !requestOk {
+		t.Errorf("got %v want %v", rr.Code, http.StatusOK)
+	}
+
+	got := rr.Body.Bytes()
+
+	var result map[string]interface{}
+
+	err = json.Unmarshal(got, &result)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	content, ok := result["profiles"]
+	if !ok {
+		t.Errorf("expected profiles got nil ")
+	}
+
+	if len(content.([]interface{})) == 0 {
+		t.Errorf("expected >= 1 got == 0 ")
+	}
+
+}
